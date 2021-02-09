@@ -2,8 +2,8 @@
 
 typedef struct metadata{
     size_t key;
-    struct metadata *left, *right;
-    struct metadata *prev, *next;
+    struct node *left, *right;
+    struct node *prev, *next;
 }metadata;
 
-typedef metadata* heap;
+typedef metadata* HEAP_HEADER;

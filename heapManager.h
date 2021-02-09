@@ -1,19 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "chunk.h"
-#include <stddef.h>
+
 #define MAX_SIZE 1024
 
-#define ALIGNMENT 8
-
-#define ALIGN(size) (((size) + (ALIGNMENT-1)) & ~(ALIGNMENT-1))
-
-#define METADATA_SIZE sizeof(metadata)
-
-int initHeap();
+void initHeap(HEAP_HEADER *p);
 metadata *my_malloc(size_t REQUIRED_SIZE);
-void my_free(metadata* toBeFreed);
-metadata* my_realloc(metadata* toBeRealloced, size_t Excess);
-metadata* my_calloc(size_t REQUIRED_SIZE);
+void my_free(matadata* toBeFreed);
+void my_realloc(metadata* toBeRealloced, size_t Excess);
+void my_calloc(size_t REQUIRED_SIZE);
 
 

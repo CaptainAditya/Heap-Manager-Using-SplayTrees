@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "heapManager.h"
+
 int main(){
     heap t;
     init(&t);
@@ -11,7 +12,8 @@ int main(){
     insert(&t, 16);
     insert(&t, 40);
     insert(&t, 22);
-    
-    splay(&t, 45);
-  preorder(t);
+    print2D(t);
+    Delete_Node_from_Heap(&t);
+    printf("-----------------------\n");
+    print2D(t);
 }

@@ -146,7 +146,35 @@ void Splay(heap *root, size_t key){
     *root = t;  
 
 }
+void Insert_Node_to_Heap(heap *t, metadata *tobeInserted){
+    if (!*t){
+        *t = tobeInserted;
+        return ;
+    }
 
+    metadata *p = *t;
+    metadata *q = NULL;
+    while (p){
+        q = p;
+        if (tobeInserted->key < p->key){
+            p = p->left;
+        }
+        else if (tobeInserted->key > p->key){
+            p = p->right;
+        }
+        else {
+            //linked list
+        }
+    }
+    if (p->key < q->key)
+        q->left = tobeInserted;
+    if (p->key > q->key)
+        q->right = tobeInserted;
+
+    return ;
+
+
+}
 metadata* Delete_Node_from_Heap(heap *t){
 
     if (!(t))
@@ -226,7 +254,7 @@ void print2DUtil(metadata *root, int space)
     printf("\n"); 
     for (int i = COUNT; i < space; i++) 
         printf(" "); 
-    printf("%d\n", root->key); 
+    printf("%zu\n", root->key); 
     
     // Process left child 
     print2DUtil(root->left, space); 

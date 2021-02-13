@@ -10,6 +10,7 @@
 
 #define METADATA_SIZE sizeof(metadata)
 #define MAX_SIZE 1024
+static heap heapStart = NULL;
 
 int initHeap();
 metadata *my_malloc(size_t REQUIRED_SIZE);

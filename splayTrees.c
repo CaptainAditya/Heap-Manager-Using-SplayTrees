@@ -163,14 +163,19 @@ void Insert_Node_to_Heap(heap *t, metadata *tobeInserted){
             p = p->right;
         }
         else {
-            //linked list
+            while (p->next){
+                p = p->next;
+            }
+            p->next = tobeInserted;
+            p->next->prev = p;
+            return ;
         }
     }
     if (p->key < q->key)
         q->left = tobeInserted;
     if (p->key > q->key)
         q->right = tobeInserted;
-
+    heapStart = *t;
     return ;
 
 
@@ -186,6 +191,12 @@ metadata* Delete_Node_from_Heap(heap *t){
     //leaf case
     if (!root->left && !root->right){
         *t = NULL;
+        if (root->next){
+            *t = root->next;
+            root->next->prev = NULL;
+            root->next->left = root->left;
+            root->next->right = root->right;
+        }
         return root;
     }
     //one child
@@ -194,6 +205,14 @@ metadata* Delete_Node_from_Heap(heap *t){
     if (root->left && !root->right){
         //p is root
         *t = root->left;
+        if (root->next){
+            *t = root->next;
+            root->next->prev = NULL;
+            root->next->left = root->left;
+            root->next->right = root->right;
+        }
+        root->left = root->right = NULL;
+        root->next = root->prev = NULL;
         return root;        
     }
 
@@ -201,10 +220,18 @@ metadata* Delete_Node_from_Heap(heap *t){
     if (!root->left && root->right){
         //p is root
         *t = root->right;
-        return ;
+        if (root->next){
+            *t = root->next;
+            root->next->prev = NULL;
+            root->next->left = root->left;
+            root->next->right = root->right;
+        }
+        root->left = root->right = NULL;
+        root->prev = root->next = NULL;
+        return root;
       
     }
-
+    int temp;
     //both children
     if (root->left && root->right){
         metadata *r = NULL;//r is parent of s
@@ -221,18 +248,86 @@ metadata* Delete_Node_from_Heap(heap *t){
 
         if (!r){
             //s doesnt have right members.
-            root->key = s->key;
-            root->left = s->left;//s may have left subtree
+            if (root->next){
+                *t = root->next;
+                root->next->left = root->left;
+                root->next->right = root->right;
+                root->next = root->left = NULL;
+                root->left = root->right = NULL;
+                return root;
+            }
+
+            if (s->next){
+                temp = root->key;
+                root->key = s->key;
+                s->key = temp;
+
+                root->next = s->next;
+                s->next->prev = root;
+
+                s->next = s->prev = NULL;
+
+                root->left = s->left;
+
+                s->left = s->right = NULL;
+
+                return s;
+
+            }
+
+            temp = s->key;
             s->key = root->key;
+            root->key = temp;
+
+            root->left = s->left;
+
             s->left = s->right = NULL;
-            return s; 
+            s->next = s->prev = NULL;
+
+            return s;
         }
 
-        root->key = s->key;
-        r->right = s->left;
-        s->key = root->key;
-        s->left = s->right = NULL;
-        return s;
+        else{
+            if (root->next){
+                root->next->left = root->left;
+                root->next->right = root->right;
+
+                root->next->prev = NULL;
+                root->next = NULL;
+                root->left = root->right = NULL;
+
+                return root;
+            }
+
+            if (s->next){
+                
+                root->next = s->next;
+                root->next->prev = root;
+
+                temp = root->key;
+                root->key = s->key;
+                s->key = temp;
+
+                s->next = s->prev = NULL;
+
+                r->right = s->left;
+
+                s->left = s->right = NULL;
+
+                return s;
+            }
+
+            temp = root->key;
+            root->key = s->key;
+            s->key = temp;
+            r->right = s->left;
+
+            return s;
+
+
+
+        }
+
     }
 }
 

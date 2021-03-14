@@ -84,3 +84,59 @@ metadata *my_malloc(size_t requiredSIZE){
     
     return ;
 }
+
+void my_free(metadata* tobefreed){
+  myfreep(&tobefreed);
+    // tobefreed -=  1;
+
+    // tobefreed = (metadata*)tobefreed;
+    // Insert_Node_to_Heap(&heapStart, tobefreed);
+
+    return ;
+}
+
+void myfreep(metadata **tobefreed){
+  tobefreed -= 1;
+  tobefreed = (metadata*)tobefreed;
+  Insert_Node_to_Heap(&heapStart, tobefreed);
+}
+
+metadata *my_calloc(size_t requiredSize){
+  
+  metadata *tobereturned = (metadata*)my_malloc(requiredSize);
+  int toEnd = ALIGN(requiredSize) / 4;
+  int i = 0;
+  int *traversal = (int*)tobereturned;
+  while (i < toEnd){
+    *traversal = 0;
+    traversal += 1;
+    i++;
+  }     
+  return tobereturned;
+}
+
+void realloc(metadata *tobeRealloced){
+  
+}
+
+void traverse(heap *t){
+    if (!*t)
+      return ;
+    traverse(&((*t)->left));
+    
+    if ((*t)->next){
+      printf("(");
+      metadata *p = *t;
+      while (p->next) { 
+        printf("%zu ", (*t)->key);
+        p = p->next;
+      }
+      printf(") ");
+    }
+
+    else
+      printf("%zu ", (*t)->key);
+    traverse(&((*t)->right));
+    return ;
+    
+}

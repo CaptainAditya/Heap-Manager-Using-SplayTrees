@@ -147,22 +147,24 @@ void Splay(heap *root, size_t key){
 
 }
 void Insert_Node_to_Heap(heap *t, metadata *tobeInserted){
+   
     if (!*t){
         *t = tobeInserted;
         return ;
     }
-
+    
     metadata *p = *t;
     metadata *q = NULL;
     while (p){
+        
         q = p;
         if (tobeInserted->key < p->key){
-            p = p->left;
+            p = p->left;             
         }
         else if (tobeInserted->key > p->key){
-            p = p->right;
+            p = p->right;            
         }
-        else {
+        else {            
             while (p->next){
                 p = p->next;
             }
@@ -170,12 +172,14 @@ void Insert_Node_to_Heap(heap *t, metadata *tobeInserted){
             p->next->prev = p;
             return ;
         }
+        
     }
-    if (p->key < q->key)
+    if (tobeInserted->key < q->key)
         q->left = tobeInserted;
-    if (p->key > q->key)
+    if (tobeInserted->key > q->key)
         q->right = tobeInserted;
-    heapStart = *t;
+        
+
     return ;
 
 
@@ -332,32 +336,3 @@ metadata* Delete_Node_from_Heap(heap *t){
 }
 
 
-void print2DUtil(metadata *root, int space) 
-{ 
-    // Base case 
-    if (root == NULL) 
-        return; 
-  
-    // Increase distance between levels 
-    space += COUNT; 
-  
-    // Process right child first 
-    print2DUtil(root->right, space); 
-  
-    // Print current node after space 
-    // count 
-    printf("\n"); 
-    for (int i = COUNT; i < space; i++) 
-        printf(" "); 
-    printf("%zu\n", root->key); 
-    
-    // Process left child 
-    print2DUtil(root->left, space); 
-} 
-  
-// Wrapper over print2DUtil() 
-void print2D(metadata *root) 
-{ 
-   // Pass initial space count as 0 
-   print2DUtil(root, 0); 
-}

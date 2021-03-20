@@ -15,6 +15,6 @@ static heap heapStart = NULL;
 
 metadata* initHeap();
 metadata *my_malloc(size_t REQUIRED_SIZE);
-//void my_free(metadata* toBeFreed);
-metadata* my_realloc(metadata* toBeRealloced, size_t Excess);
+void my_free(metadata* toBeFreed);
+void *my_realloc(metadata* toBeRealloced, size_t new_size);
 metadata* my_calloc(size_t REQUIRED_SIZE);

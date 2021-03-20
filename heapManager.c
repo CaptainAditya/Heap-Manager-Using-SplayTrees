@@ -86,20 +86,16 @@ metadata *my_malloc(size_t requiredSIZE){
 }
 
 void my_free(metadata* tobefreed){
-  myfreep(&tobefreed);
-    // tobefreed -=  1;
+    tobefreed -=  1;
+    
+    tobefreed = (metadata*)tobefreed;
 
-    // tobefreed = (metadata*)tobefreed;
-    // Insert_Node_to_Heap(&heapStart, tobefreed);
+    Insert_Node_to_Heap(&heapStart, tobefreed);
 
     return ;
 }
 
-void myfreep(metadata **tobefreed){
-  tobefreed -= 1;
-  tobefreed = (metadata*)tobefreed;
-  Insert_Node_to_Heap(&heapStart, tobefreed);
-}
+
 
 metadata *my_calloc(size_t requiredSize){
   
@@ -115,8 +111,47 @@ metadata *my_calloc(size_t requiredSize){
   return tobereturned;
 }
 
-void realloc(metadata *tobeRealloced){
+void* my_realloc(metadata *tobeRealloced, size_t size){
+  size = ALIGN(size);
+  metadata* tobeAdded;
+  tobeRealloced -= 1;
   
+  if (tobeRealloced->key - METADATA_SIZE < size){
+    
+    //create new block
+    tobeAdded = (metadata*)my_malloc(size);   
+    //copy content 
+    
+      
+    char *new = (char*)(tobeAdded);
+    char *prev = (char*)(tobeRealloced + 1);
+    
+    for (int i = 0; i < tobeRealloced->key - METADATA_SIZE; i++){
+      *(new + i) = *(prev + i);
+    }  
+          
+    //free previous pointer
+    tobeRealloced += 1;
+    my_free(tobeRealloced);
+    return (void*)(tobeAdded);
+  }
+
+  else if (tobeRealloced->key - METADATA_SIZE > size){
+    
+    char *curr = (char*)tobeRealloced;
+    curr += size;
+    for (int i = size; i < tobeRealloced->key - METADATA_SIZE; i++){
+      *curr = NULL;
+      curr++;
+    }
+    //use split
+    tobeRealloced = split(tobeRealloced, size);
+    //copy content
+    return (void*)(tobeRealloced + 1);        
+    //return
+  }  
+  else
+    return tobeRealloced;
 }
 
 void traverse(heap *t){

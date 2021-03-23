@@ -4,25 +4,28 @@
 
 heap *todebug;
 
+typedef struct info{
+     int roll;
+     char *a;
+}info;
+
+
 int main(){   
      
-     int *a = (int*)my_malloc(sizeof(int)*4);
-     a[0] = 0;
-     a[1] = 1;
-     a[2] = 2;
-     a[3] = 3;
-     traverse(todebug);
-     printf("\n");
+    info* a = (info*)my_malloc(sizeof(info));
+    a->roll = 2;
+    a->a = (char*)my_malloc(sizeof(char)*20);
+    strcpy(a->a, "Hello");
+    printf("%d %s", a->roll, a->a);
+    printf("\n");
+    traverse(todebug);
+    my_free(a->a);
+    printf("\n");
+    traverse(todebug);
+    my_free(a);
+    printf("\n");
+    traverse(todebug);
 
-     for (int i = 0; i < 4; i++){
-          a[i] = i;
-          printf("%d ", a[i]);
-     }
-     
-     a = (int*)my_realloc(a, sizeof(int)*2);
-     for (int i = 0; i < 8; i++){          
-          printf("%d ", a[i]);
-     }
-     traverse(todebug);
 
+   
 }

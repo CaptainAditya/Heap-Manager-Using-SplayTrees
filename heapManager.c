@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <limits.h>
 #include "heapManager.h"
 #include "heapapi.h"
 
@@ -86,9 +87,21 @@ metadata *my_malloc(size_t requiredSIZE){
 }
 
 void my_free(metadata* tobefreed){
+
+  
     tobefreed -=  1;
     
-    tobefreed = (metadata*)tobefreed;
+    char *curr = (char*)tobefreed;
+
+    int i = 0;
+
+    curr += METADATA_SIZE;
+
+    while (i < tobefreed->key  - METADATA_SIZE){
+      *curr = NULL;
+      curr++;
+      i++;
+    }        
 
     Insert_Node_to_Heap(&heapStart, tobefreed);
 
@@ -138,15 +151,10 @@ void* my_realloc(metadata *tobeRealloced, size_t size){
 
   else if (tobeRealloced->key - METADATA_SIZE > size){
     
-    char *curr = (char*)tobeRealloced;
-    curr += size;
-    for (int i = size; i < tobeRealloced->key - METADATA_SIZE; i++){
-      *curr = NULL;
-      curr++;
-    }
+    
     //use split
     tobeRealloced = split(tobeRealloced, size);
-    //copy content
+    
     return (void*)(tobeRealloced + 1);        
     //return
   }  

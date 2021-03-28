@@ -69,12 +69,14 @@ metadata *my_malloc(size_t requiredSIZE){
     size_t total_memeory = requiredSIZE + METADATA_SIZE;
     
     metadata *required_Node = Delete_Node_from_Heap(&heapStart);
+    
     if (required_Node -> key == total_memeory){
         return (void*)required_Node + 1;
     }
 
     else if (required_Node -> key > total_memeory){
       tobeReturned = split(required_Node, requiredSIZE);
+      
       return (void*)(tobeReturned + 1);      
     }
 
@@ -88,21 +90,11 @@ metadata *my_malloc(size_t requiredSIZE){
 
 void my_free(metadata* tobefreed){
 
-  
-    tobefreed -=  1;
-    
-    char *curr = (char*)tobefreed;
-
-    int i = 0;
-
-    curr += METADATA_SIZE;
-
-    while (i < tobefreed->key  - METADATA_SIZE){
-      *curr = NULL;
-      curr++;
-      i++;
-    }        
-
+    if (tobefreed == NULL)
+      return ;
+    tobefreed = (metadata*)(tobefreed);
+    tobefreed -= 1;
+    printf("lol", tobefreed->key);
     Insert_Node_to_Heap(&heapStart, tobefreed);
 
     return ;

@@ -178,14 +178,14 @@ void Insert_Node_to_Heap(heap *t, metadata *tobeInserted){
         q->left = tobeInserted;
     if (tobeInserted->key > q->key)
         q->right = tobeInserted;
-        
+
+    Splay(t, tobeInserted->key);        
 
     return ;
 
 
 }
 metadata* Delete_Node_from_Heap(heap *t){
-
     if (!(t))
         return;
     metadata *root = *t, *q = NULL;    
@@ -327,9 +327,6 @@ metadata* Delete_Node_from_Heap(heap *t){
             r->right = s->left;
 
             return s;
-
-
-
         }
 
     }

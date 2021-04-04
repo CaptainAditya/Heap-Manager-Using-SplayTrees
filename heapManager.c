@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <unistd.h>
-#include <limits.h>
 #include "heapManager.h"
 #include "heapapi.h"
 
@@ -69,9 +68,8 @@ metadata *my_malloc(size_t requiredSIZE){
     size_t total_memeory = requiredSIZE + METADATA_SIZE;
     
     metadata *required_Node = Delete_Node_from_Heap(&heapStart);
-    
     if (required_Node -> key == total_memeory){
-        return (void*)required_Node + 1;
+        return (void*)(required_Node + 1);
     }
 
     else if (required_Node -> key > total_memeory){
@@ -81,23 +79,38 @@ metadata *my_malloc(size_t requiredSIZE){
     }
 
     else{
-      //memeory out of range
-      //more heap memeory required.
+      Insert_Node_to_Heap(&heapStart, required_Node);
+      Splay(&heapStart, total_memeory);
+      required_Node = Delete_Node_from_Heap(&heapStart);
+      if (required_Node->key == total_memeory)
+        return (void*)(required_Node + 1);
+      else if (required_Node->key > total_memeory){
+        tobeReturned = split(required_Node, requiredSIZE);
+        return (void*)(tobeReturned + 1);
+      }
+      
     }
     
-    return ;
+    return NULL;
 }
 
 void my_free(metadata* tobefreed){
 
-    if (tobefreed == NULL)
-      return ;
-    tobefreed = (metadata*)(tobefreed);
-    tobefreed -= 1;
-    printf("lol", tobefreed->key);
-    Insert_Node_to_Heap(&heapStart, tobefreed);
+    tobefreed -=  1;
+    
+    char *curr = (char*)tobefreed;
 
-    return ;
+    int i = 0;
+
+    curr += METADATA_SIZE;
+
+    while (i < tobefreed->key  - METADATA_SIZE){
+      *curr = NULL;
+      curr++;
+      i++;
+    }        
+
+    Insert_Node_to_Heap(&heapStart, tobefreed);
 }
 
 
@@ -143,10 +156,15 @@ void* my_realloc(metadata *tobeRealloced, size_t size){
 
   else if (tobeRealloced->key - METADATA_SIZE > size){
     
-    
+    char *curr = (char*)tobeRealloced;
+    curr += size;
+    for (int i = size; i < tobeRealloced->key - METADATA_SIZE; i++){
+      *curr = NULL;
+      curr++;
+    }
     //use split
     tobeRealloced = split(tobeRealloced, size);
-    
+    //copy content
     return (void*)(tobeRealloced + 1);        
     //return
   }  

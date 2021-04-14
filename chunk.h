@@ -1,3 +1,5 @@
+#define MAX_SIZE 1024*3
+
 typedef struct metadata{
     size_t key;
     struct metadata *left, *right;

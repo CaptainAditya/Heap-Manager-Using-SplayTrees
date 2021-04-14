@@ -2,5 +2,6 @@
     "files.associations": {
         "heapmanager.h": "c",
         "chunk.h": "c"
-    }
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }

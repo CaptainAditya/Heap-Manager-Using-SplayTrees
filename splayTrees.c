@@ -1,73 +1,6 @@
 #include "splayTrees.h"
-#define COUNT 10
-void init(heap *t){
-    *t = NULL;
-    return ;
-}
 
-void insert(heap *t, size_t data){
-    metadata *nn = (metadata*)malloc(sizeof(metadata));
-    if (!(nn))
-        return ;
-    nn->key = data;
-    nn->left = NULL;
-    nn->right = NULL;
 
-    if (*t == NULL){
-        *t = nn;
-        return ;
-    }
-
-    metadata *p = *t;
-    metadata *q = NULL;
-
-    while (p){
-        q = p;
-        if (data < p->key)
-            p = p->left;
-        else if(data > p->key)
-            p = p ->right;
-        else{
-            free(nn);
-            return ;
-        }
-    }
-    if (data < q->key)
-        q->left = nn;
-    else{
-        q->right = nn;
-    }
-    return ;
-}
-
-void preorder(heap t){
-    if (t == NULL)
-        return ;
-    printf("%d ",t->key);
-    preorder(t->left);
-    preorder(t->right);
-    return ;
-}
-
-void inorder(heap t){
-    if (t == NULL)
-        return ;
-    inorder(t->left);
-    printf("%d ",t->key);
-    inorder(t->right);
-    return;
-}
-
-void postorder(heap t){
-    if (t == NULL)
-        return ;
-    postorder(t->left);
-    
-    postorder(t->right);
-
-    printf("%d ",t->key);
-    return;
-}
 
 void Splay(heap *root, size_t key){
 
@@ -87,8 +20,7 @@ void Splay(heap *root, size_t key){
             if (t->left == NULL)
                 break;
             
-            //Rotate Right
-            
+            //LL Rotation
             if (t->left && key < t->left->key){
                 y = t->left;
                 t->left = y->right;
@@ -99,20 +31,18 @@ void Splay(heap *root, size_t key){
                     break;
             }
 
-            //LINK right
+            //Link right
 
             r->left = t;
             r = t;
             t = t->left;
-            
         }
 
         else if (key > t->key){
             if (t->right == NULL)
                 break;
             
-            //Rotate Left
-
+            //RR Rotation
             if (key > t->right->key){
                 y = t->right;
                 t->right = y->left;
@@ -138,8 +68,10 @@ void Splay(heap *root, size_t key){
 
 
     l->right = r->left = NULL;
+
     l->right = t->left;
     r->left = t->right;
+
     t->left = n.right;
     t->right = n.left;
 
@@ -200,7 +132,9 @@ metadata* Delete_Node_from_Heap(heap *t){
             root->next->prev = NULL;
             root->next->left = root->left;
             root->next->right = root->right;
+            root->next = NULL;
         }
+        
         return root;
     }
     //one child
@@ -232,6 +166,7 @@ metadata* Delete_Node_from_Heap(heap *t){
         }
         root->left = root->right = NULL;
         root->prev = root->next = NULL;
+        
         return root;
       
     }
@@ -256,7 +191,7 @@ metadata* Delete_Node_from_Heap(heap *t){
                 *t = root->next;
                 root->next->left = root->left;
                 root->next->right = root->right;
-                root->next = root->left = NULL;
+                root->next = root->prev = NULL;
                 root->left = root->right = NULL;
                 return root;
             }
@@ -332,4 +267,73 @@ metadata* Delete_Node_from_Heap(heap *t){
     }
 }
 
+/************TODEBUG************/
 
+void init(heap *t){
+    *t = NULL;
+    return ;
+}
+
+void insert(heap *t, size_t data){
+    metadata *nn = (metadata*)malloc(sizeof(metadata));
+    if (!(nn))
+        return ;
+    nn->key = data;
+    nn->left = NULL;
+    nn->right = NULL;
+
+    if (*t == NULL){
+        *t = nn;
+        return ;
+    }
+
+    metadata *p = *t;
+    metadata *q = NULL;
+
+    while (p){
+        q = p;
+        if (data < p->key)
+            p = p->left;
+        else if(data > p->key)
+            p = p ->right;
+        else{
+            free(nn);
+            return ;
+        }
+    }
+    if (data < q->key)
+        q->left = nn;
+    else{
+        q->right = nn;
+    }
+    return ;
+}
+
+void preorder(heap t){
+    if (t == NULL)
+        return ;
+    printf("%d ",t->key);
+    preorder(t->left);
+    preorder(t->right);
+    return ;
+}
+
+void inorder(heap t){
+    if (t == NULL)
+        return ;
+    inorder(t->left);
+    printf("%d ",t->key);
+    inorder(t->right);
+    return;
+}
+
+void postorder(heap t){
+    if (t == NULL)
+        return ;
+    postorder(t->left);
+    
+    postorder(t->right);
+
+    printf("%d ",t->key);
+    return;
+}
